@@ -29,6 +29,11 @@ public:
 
     ~MapSnapshotter();
 
+    void setStyle(const std::string& styleURL);
+    void setSize(const Size&);
+    void setCameraOptions(const CameraOptions&);
+    void setRegion(const LatLngBounds&);
+
     using Callback = std::function<void (std::exception_ptr, PremultipliedImage)>;
     void snapshot(ActorRef<Callback>);
 
