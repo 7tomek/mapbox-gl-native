@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mbgl/util/constants.hpp>
+#include <mbgl/util/optional.hpp>
 
 #include <cstdint>
 #include <array>
@@ -58,6 +59,7 @@ public:
     uint32_t overscaleFactor() const;
     OverscaledTileID scaledTo(uint8_t z) const;
     UnwrappedTileID toUnwrapped() const;
+    optional<OverscaledTileID> parent() const;
 
     const uint8_t overscaledZ;
     const int16_t wrap;
@@ -189,6 +191,17 @@ inline OverscaledTileID OverscaledTileID::scaledTo(uint8_t z) const {
 
 inline UnwrappedTileID OverscaledTileID::toUnwrapped() const {
     return { wrap, canonical };
+}
+
+inline optional<OverscaledTileID> OverscaledTileID::parent() const {
+    if (overscaledZ == 0) {
+        return {};
+    } else if (overscaledZ > canonical.z) {
+        return { OverscaledTileID{ static_cast<uint8_t>(overscaledZ - 1), wrap, canonical } };
+    } else {
+        return { OverscaledTileID{ static_cast<uint8_t>(overscaledZ - 1), wrap,
+            static_cast<uint8_t>(canonical.z - 1), static_cast<uint8_t>(canonical.x / 2), static_cast<uint8_t>(canonical.y / 2) }};
+    }
 }
 
 inline UnwrappedTileID::UnwrappedTileID(uint8_t z_, int64_t x_, int64_t y_)
