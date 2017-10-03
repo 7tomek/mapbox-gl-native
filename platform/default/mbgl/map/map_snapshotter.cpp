@@ -65,6 +65,7 @@ void MapSnapshotter::Impl::setStyle(std::string styleURL) {
 
 void MapSnapshotter::Impl::setSize(Size size) {
     map.setSize(size);
+    frontend.setSize(size);
 }
 
 void MapSnapshotter::Impl::setCameraOptions(CameraOptions cameraOptions) {
